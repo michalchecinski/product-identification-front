@@ -12,14 +12,14 @@ const Product: FunctionComponent<Props> = ({ product }) => (
         </div>
         <div className="col">
             <div className="row">
-                {product.name}
+                {product.Name}
             </div>
             <div className="row">
                 <div className="col">
-                    {product.grossPrice}
+                    {product.GrossPrice}
                 </div>
                 <div className="col">
-                    (netto: {product.netPrice})
+                    (netto: {product.NetPrice})
                 </div>
             </div>
         </div>

@@ -13,15 +13,9 @@ class App extends Component<{}, State>  {
 
   constructor(props: State) {
     super(props);
-    let product: ProductModel = {
-      name: "Test",
-      grossPrice: 15,
-      netPrice: 12
-    }
+
     this.state = {
-      products: [
-        product
-      ]
+      products: []
     };
   }
 
@@ -34,24 +28,34 @@ class App extends Component<{}, State>  {
     });
   }
 
-  manageUploadedFile(binary: String, file: File) {
-    // do what you need with your file (fetch POST, ect ....)
+  manageUploadedFile (binary: string, file: File) : void {
+    fetch(`${API_URL}/IdentifyProduct`, {
+      method: 'post',
+      body: binary
+    }).then(function (response) {
+      return response.json();
+    }).then( (data) => {
+      var locations: ProductModel = JSON.parse(data);
+      this.setState({
+        products: [...this.state.products, locations]
+     })
+    })
     console.log(`The file size is ${binary.length}`);
     console.log(`The file name is ${file.name}`);
   }
 
-  handleFileChange(event: React.ChangeEvent<HTMLInputElement>) : void {
+  handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     event.persist();
 
-    let file : File = event.target.files[0] as File;
+    let file: File = event.target.files[0] as File;
 
-      this.getFileFromInput(file)
-        .then((binary) => {
-          this.manageUploadedFile(binary, file);
-        }).catch(function (reason) {
-          console.log(`Error during upload ${reason}`);
-          event.target.value = ''; // to allow upload of same file if error occurs
-        })
+    this.getFileFromInput(file)
+      .then((binary) => {
+        this.manageUploadedFile(binary, file);
+      }).catch(function (reason) {
+        console.log(`Error during upload ${reason}`);
+        event.target.value = ''; // to allow upload of same file if error occurs
+      })
   }
 
   render() {
