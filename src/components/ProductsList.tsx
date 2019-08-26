@@ -9,7 +9,7 @@ interface Props {
 const ProductsList: FunctionComponent<Props> = ({ products }) => (
     <div>
       {products.map(product => (
-        <Product product={product} />
+        <Product key={product.Id} product={product} />
       ))}
     </div>
   );
