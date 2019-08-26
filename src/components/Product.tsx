@@ -12,15 +12,20 @@ const Product: FunctionComponent<Props> = ({ product }) => (
         </div>
         <div className="col">
             <div className="row">
-                {product.Name}
+                <h5>{product.Name}</h5>
             </div>
             <div className="row">
                 <div className="col">
-                    {product.GrossPrice}
+                    <h6>{product.GrossPrice} <small>(netto: {product.NetPrice})</small></h6>
                 </div>
-                <div className="col">
-                    (netto: {product.NetPrice})
-                </div>
+            </div>
+        </div>
+        <div className="col-3">
+            <div className="row">
+                <h5>x{product.Quantity}</h5>
+            </div>
+            <div className="row">
+                <h6>{product.Quantity*product.GrossPrice}</h6> (netto: {product.Quantity*product.NetPrice})
             </div>
         </div>
     </div>
