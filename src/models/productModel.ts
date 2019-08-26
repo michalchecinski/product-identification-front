@@ -1,5 +1,7 @@
 export interface ProductModel {
-    NetPrice: number;
-    GrossPrice: number;
-    Name: string;
-  }
+  Quantity: number;
+  Id: number;
+  NetPrice: number;
+  GrossPrice: number;
+  Name: string;
+}

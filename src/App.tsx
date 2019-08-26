@@ -19,29 +19,41 @@ class App extends Component<{}, State>  {
     };
   }
 
-  getFileFromInput(file: File): Promise<any> {
-    return new Promise(function (resolve, reject) {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = function () { resolve(reader.result); };
-      reader.readAsBinaryString(file); // here the file can be read in different way Text, DataUrl, ArrayBuffer
-    });
-  }
-
-  manageUploadedFile (binary: string, file: File) : void {
+  manageUploadedFile(file: File): void {
     fetch(`${API_URL}/IdentifyProduct`, {
       method: 'post',
-      body: binary
+      body: file
     }).then(function (response) {
-      return response.json();
-    }).then( (data) => {
-      var locations: ProductModel = JSON.parse(data);
-      this.setState({
-        products: [...this.state.products, locations]
-     })
+      if (response.ok) {
+        return response.json();
+      }
+      if (response.status === 404) {
+        throw new Error("Nie znaleziono produktu.")
+      }
+    }).catch(function (err) {
+      alert(err + "\n\r Spróbuj ponownie lub skontaktuj się z obsługą.");
+    }).then((data) => {
+      var added: boolean = false;
+      var product: ProductModel = JSON.parse(data);
+      var products: ProductModel[] = this.state.products;
+      products.forEach((prod) => {
+        if (prod.Id === product.Id) {
+          prod.Quantity += 1;
+          this.setState({
+            products: products
+          });
+          added = true;
+        }
+      })
+      if (added === false) {
+        product.Quantity = 1;
+        this.setState({
+          products: [...this.state.products, product]
+        })
+      }
+    }).catch(function (err) {
+      alert("Mamy problemy :(\n\rSpróbuj ponownie lub skontaktuj się z obsługą.");
     })
-    console.log(`The file size is ${binary.length}`);
-    console.log(`The file name is ${file.name}`);
   }
 
   handleFileChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -49,13 +61,7 @@ class App extends Component<{}, State>  {
 
     let file: File = event.target.files[0] as File;
 
-    this.getFileFromInput(file)
-      .then((binary) => {
-        this.manageUploadedFile(binary, file);
-      }).catch(function (reason) {
-        console.log(`Error during upload ${reason}`);
-        event.target.value = ''; // to allow upload of same file if error occurs
-      })
+    this.manageUploadedFile(file);
   }
 
   render() {
@@ -67,7 +73,7 @@ class App extends Component<{}, State>  {
             <ProductsList products={this.state.products} />
           </div>
           <div className="col-9">
-            Picture.
+            Naciśnij obrazek poniżej aby dodać nowy produkt do koszyka:
             <UploadFileComponent onChange={this.handleFileChange} />
           </div>
         </div>
