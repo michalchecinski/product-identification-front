@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import Product from './Product'
-import { ProductModel } from "../models/productModel";
+import { ProductModel } from "../models/ProductModel";
 
 interface Props {
     products: ProductModel[];

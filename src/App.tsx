@@ -1,13 +1,12 @@
-import React, { Component, ChangeEvent } from "react";
+import React, { Component } from "react";
 import './App.css';
 import ProductsList from './components/ProductsList';
 import UploadFileComponent from './components/UploadFileComponent';
-import { ProductModel } from "./models/productModel";
+import Receipt from './components/ReceiptComponent';
+import { ProductModel } from "./models/ProductModel";
+import { State } from "./models/State";
 import { API_URL } from "./config.js";
 
-interface State {
-  products: ProductModel[];
-}
 
 class App extends Component<{}, State>  {
 
@@ -64,13 +63,29 @@ class App extends Component<{}, State>  {
     this.manageUploadedFile(file);
   }
 
+  cleanProducts = (): void => {
+    this.setState({
+      products: []
+    })
+  }
+
   render() {
+    var receiptButton;
+
+    if(this.state.products.length > 0) {
+      receiptButton = <Receipt products={this.state.products} afterGenerate={this.cleanProducts} />
+    }
+    else{
+      receiptButton=null;
+    }
+
     return (
       <div className="container-fluid">
         <div className="row">
           <div className="col-3">
             Lista produktów:
             <ProductsList products={this.state.products} />
+            {receiptButton}
           </div>
           <div className="col-9">
             Naciśnij obrazek poniżej aby dodać nowy produkt do koszyka:
