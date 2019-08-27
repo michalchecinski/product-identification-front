@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { ProductModel } from "../models/productModel";
+import { ProductModel } from "../models/ProductModel";
 
 interface Props {
     product: ProductModel;
