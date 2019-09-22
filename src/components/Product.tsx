@@ -8,7 +8,7 @@ interface Props {
 const Product: FunctionComponent<Props> = ({ product }) => (
     <div className="row border border-primary m-1">
         <div className="col-3">
-            img
+        <img src={product.Photo} width="50" height="50" className="img" alt="Responsive image"/>
         </div>
         <div className="col">
             <div className="row">
