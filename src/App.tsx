@@ -13,9 +13,17 @@ class App extends Component<{}, State>  {
   constructor(props: State) {
     super(props);
 
-    this.state = {
-      products: []
-    };
+    var productsFromStorage = localStorage.getItem("products");
+    if (productsFromStorage) {
+      this.state = {
+        products: JSON.parse(productsFromStorage)
+      };
+    }
+    else {
+      this.state = {
+        products: []
+      };
+    }
   }
 
   manageUploadedFile(file: File): void {
@@ -38,18 +46,19 @@ class App extends Component<{}, State>  {
       products.forEach((prod) => {
         if (prod.Id === product.Id) {
           prod.Quantity += 1;
-          this.setState({
-            products: products
-          });
           added = true;
         }
       })
       if (added === false) {
         product.Quantity = 1;
-        this.setState({
-          products: [...this.state.products, product]
-        })
+        products = [...products, product]
       }
+      this.setState({
+        products: products
+      })
+      localStorage.removeItem("products");
+      localStorage.setItem("products", JSON.stringify(this.state.products));
+
     }).catch(function (err) {
       alert("Mamy problemy :(\n\rSpróbuj ponownie lub skontaktuj się z obsługą.");
     })
@@ -67,16 +76,17 @@ class App extends Component<{}, State>  {
     this.setState({
       products: []
     })
+    localStorage.removeItem("products");
   }
 
   render() {
     var receiptButton;
 
-    if(this.state.products.length > 0) {
+    if (this.state.products.length > 0) {
       receiptButton = <Receipt products={this.state.products} afterGenerate={this.cleanProducts} />
     }
-    else{
-      receiptButton=null;
+    else {
+      receiptButton = null;
     }
 
     return (
