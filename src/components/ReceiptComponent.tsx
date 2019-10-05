@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 
 interface Props {
     products: ProductModel[];
-  }
+}
 
 const Pdf: FunctionComponent<Props> = ({ products }) => {
     var netSum: number = 0.0;
@@ -52,21 +52,26 @@ const Pdf: FunctionComponent<Props> = ({ products }) => {
     );
 }
 
-const Receipt: FunctionComponent<ReceiptComponentProps> = ( props ) => (
-    <PDFDownloadLink document={<Pdf products={props.products} />} fileName="paragon.pdf">
-        {({ blob, url, loading, error }) => {
-            if (loading) {
-                return <div style={{ textAlign: "center" }}>Przetwarzanie koszyka...</div>;
-            }
-            else {
-                return (
-                <div style={{ textAlign: "center" }} className="mt-4">
-                    <div className="btn btn-primary">Zakończ i zapłać!</div>
-                </div>
-                )
-            }
-        }}
-    </PDFDownloadLink>
-);
+const Receipt: FunctionComponent<ReceiptComponentProps> = (props) => {
+
+    props.afterGenerate();
+
+    return (
+        <PDFDownloadLink document={<Pdf products={props.products} />} fileName="paragon.pdf">
+            {({ blob, url, loading, error }) => {
+                if (loading) {
+                    return <div style={{ textAlign: "center" }}>Przetwarzanie koszyka...</div>;
+                }
+                else {
+                    return (
+                        <div style={{ textAlign: "center" }} className="mt-4">
+                            <div className="btn btn-primary">Zakończ i zapłać!</div>
+                        </div>
+                    )
+                }
+            }}
+        </PDFDownloadLink>
+    );
+}
 
 export default Receipt;
