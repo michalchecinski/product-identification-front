@@ -36,7 +36,7 @@ const Pdf: FunctionComponent<Props> = ({ products }) => {
             {products.map(product => (
                 <View style={styles.section}>
                     <Text>
-                        {product.Name} x{product.Quantity}
+                        {product.Name}  x{product.Quantity}
                     </Text>
                     <Text>
                         {product.Quantity}x {product.GrossPrice} (netto: {product.NetPrice}) =
